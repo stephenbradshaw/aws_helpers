@@ -250,13 +250,9 @@ class S3Util(object):
 
 
 
-my_bucket = 'secops-dta-test-s3-bucket'
-util = S3Util(my_bucket)
 
 
 
 
-#feeds.yml in SCYTHE has feed info and match data for routers
-#messageformat defines parsing
 
 

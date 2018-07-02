@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# other stuff
+.DS_Store
+.envrc
+*.key
+*.swp
+*.swo
+
+*.secret

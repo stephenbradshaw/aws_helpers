@@ -79,7 +79,11 @@ class S3BucketUtil(S3Base):
 
     def ls(self):
         '''List bucket contents'''
-        return [ a['Key'] for a in self.s3_client.list_objects(Bucket=self.bucket)['Contents']]
+        d = self.s3_client.list_objects(Bucket=self.bucket)
+        if 'Contents' in d:
+            return [ a['Key'] for a in d['Contents']]
+        else:
+            return []
 
 
     def cat(self, key):

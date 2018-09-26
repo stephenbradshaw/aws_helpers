@@ -5,7 +5,8 @@ import argparse
 import datetime
 from dateutil.tz import tzutc
 
-description = 'Simple utility to return a list of the most recent spot prices for all availability zones in a region.'
+DESCRIPTION = 'Simple utility to return a list of the most recent spot prices for all availability zones in a region.'
+DEFAULT_INSTANCE = ['m3.large']
 
 
 def get_current_region():
@@ -51,7 +52,7 @@ def get_spot_price(instance_types, region_name=None, products=['Linux/UNIX'], hi
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=description)
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-i', '--instancetypes',
                         help='comma seperated list of instance types to check (https://aws.amazon.com/ec2/instance-types/). Default:("m3.large")',
                         required=False,
@@ -85,7 +86,7 @@ if __name__ == '__main__':
     if args.instancetypes:
         myargs['instance_types'] = [ a.lstrip().rstrip() for a in args.instancetypes.split(',') if a ]
     else:
-        myargs['instance_types'] = ['m3.large']
+        myargs['instance_types'] = DEFAULT_INSTANCE
 
     if args.products:
         myargs['products'] = [ a.lstrip().rstrip() for a in args.products.split(',') if a ]

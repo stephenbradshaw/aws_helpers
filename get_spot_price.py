@@ -2,7 +2,6 @@
 import boto3
 import sys
 import argparse
-import json
 import datetime
 from dateutil.tz import tzutc
 
@@ -54,7 +53,7 @@ def get_spot_price(instance_types, region_name=None, products=['Linux/UNIX'], hi
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('-i', '--instancetypes',
-                        help='comma seperated list of instance types to check. Default:("m3.large")',
+                        help='comma seperated list of instance types to check (https://aws.amazon.com/ec2/instance-types/). Default:("m3.large")',
                         required=False,
                         action='store')
     parser.add_argument('-r', '--region',
@@ -62,7 +61,7 @@ if __name__ == '__main__':
                         required=False,
                         action='store')
     parser.add_argument('-p', '--products',
-                        help='comma seperated list of ec2 products. Default:("Linux/UNIX")',
+                        help='comma seperated list of ec2 products (Windows, SUSE Linux, Linux/UNIX). Default:("Linux/UNIX")',
                         required=False,
                         action='store')
     parser.add_argument('-x', '--history',
@@ -77,19 +76,19 @@ if __name__ == '__main__':
 
     
     args = parser.parse_args()
-    myargs={}
+    
+    if args.region:
+        myargs = {'region_name' : args.region}
+    else:
+        myargs = {'region_name' : get_current_region()}
+
     if args.instancetypes:
-        myargs['instance_types'] = args.instancetypes.split(',')
+        myargs['instance_types'] = [ a.lstrip().rstrip() for a in args.instancetypes.split(',') if a ]
     else:
         myargs['instance_types'] = ['m3.large']
 
     if args.products:
-        myargs['products'] = args.products.split(',')
-
-    if args.region:
-        myargs['region_name'] = args.region
-    else:
-        myargs['region_name'] = get_current_region()
+        myargs['products'] = [ a.lstrip().rstrip() for a in args.products.split(',') if a ]
 
     if args.history:
         try:
@@ -97,7 +96,6 @@ if __name__ == '__main__':
         except:
             raise argparse.ArgumentTypeError("%s must be an integer" % args.history)
         
-
     sp = get_spot_price(**myargs)
 
     print 'Region: %s' %(myargs['region_name'])
